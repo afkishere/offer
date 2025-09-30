@@ -5,24 +5,43 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>POAS & Scaling Calculator — eCommerce</title>
   <style>
-    :root{--bg:#0f1724;--card:#0b1220;--muted:#9aa6bf;--accent:#7dd3fc;--glass: rgba(255,255,255,0.04)}
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220;
+      --muted:#9aa6bf;
+      --accent:#7dd3fc;
+      --glass: rgba(255,255,255,0.04);
+      --green:#22c55e;
+      --yellow:#facc15;
+      --blue:#3b82f6;
+      --violet:#a78bfa;
+      --red:#ef4444;
+    }
     *,*::before,*::after{box-sizing:border-box}
     html,body{height:100%;margin:0;font-family:Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;color:#e6eef8;background:linear-gradient(180deg,#071025 0%, #071427 100%);}
     .wrap{max-width:1200px;width:calc(100% - 40px);margin:28px auto;padding:20px;}
-    h1{font-size:20px;margin:0 0 10px}
-    .grid{display:grid;grid-template-columns:minmax(300px,1fr) 380px;gap:18px;align-items:start}
+    h1{font-size:22px;margin:0 0 16px;text-align:center}
+    .grid{display:grid;grid-template-columns:1fr 380px;gap:18px;align-items:start}
     .card{background:var(--card);padding:18px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.6);}
-    label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
-    input[type=number]{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:var(--glass);color:#e6eef8;font-size:14px}
-    .row{display:flex;gap:12px;flex-wrap:wrap}
-    .row > *{flex:1}
-    .btn{background:#0ea5e9;color:#021026;padding:10px 12px;border-radius:9px;border:0;cursor:pointer;font-weight:600;width:100%}
+    label{display:block;font-size:13px;color:#fff;margin-bottom:4px}
+    input[type=number]{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:var(--glass);color:#e6eef8;font-size:14px}
+    .row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+    .row > *{flex:1;min-width:140px}
+    .btn{background:#0ea5e9;color:#021026;padding:10px 12px;border-radius:9px;border:0;cursor:pointer;font-weight:600;width:100%;margin-top:8px}
     .results{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:12px;border-radius:10px;margin-top:12px;word-break:break-word}
-    .kpi{display:flex;gap:12px;flex-wrap:wrap}
-    .kpi .item{flex:1;min-width:150px;background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;text-align:center}
+    .kpi{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+    .item-block{flex:1;min-width:150px;background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;text-align:center;margin-bottom:12px}
     .muted{color:var(--muted);font-size:13px}
-    footer{margin-top:14px;color:var(--muted);font-size:13px}
-    @media (max-width:900px){.grid{grid-template-columns:1fr}}
+    .green{color:var(--green);font-weight:700;font-size:18px}
+    .yellow{color:var(--yellow);font-weight:700;font-size:18px}
+    .blue{color:var(--blue);font-weight:700;font-size:18px}
+    .violet{color:var(--violet);font-weight:700;font-size:18px}
+    .red{color:var(--red);font-weight:700;font-size:18px}
+    .white-bold{color:#fff;font-weight:700;font-size:13px}
+    footer{margin-top:14px;color:var(--muted);font-size:12px;text-align:left;line-height:1.4}
+    @media (max-width:900px){.grid{grid-template-columns:1fr}.wrap{padding:12px}h1{font-size:20px}}
+    @media (max-width:600px){label{font-size:12px}input[type=number]{font-size:13px;padding:8px}}
+    h4.section-title{margin-top:12px;color:#7dd3fc;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:4px;margin-bottom:8px;font-size:15px}
   </style>
 </head>
 <body>
@@ -31,31 +50,54 @@
     <div class="grid">
       <div class="card">
         <h3>Inputs</h3>
-        <label>Cost to acquire 1 customer (CPA) — lei</label>
-        <input id="cpa" type="number" value="35" min="0" step="0.01" />
-
-        <div class="row" style="margin-top:12px;">
-          <div><label>Fixed costs / day (lei)</label><input id="fixed" type="number" value="2900" min="0" step="1"/></div>
-          <div><label>Daily customers acquired</label><input id="dailyCustomers" type="number" value="100" min="0" step="1"/></div>
+        <div class="row">
+          <div>
+            <label>CPA (lei)</label>
+            <input id="cpa" type="number" value="35" min="0" step="0.01" />
+          </div>
+          <div>
+            <label>Fixed costs / day (lei, excl. VAT)</label>
+            <input id="fixed" type="number" value="2900" min="0" step="1"/>
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label>Daily customers acquired</label>
+            <input id="dailyCustomers" type="number" value="100" min="0" step="1"/>
+          </div>
         </div>
 
         <h4 style="margin-top:16px;color:#fff">Product Pricing (incl. VAT)</h4>
         <div class="row">
-          <div><label>Purchase price</label><input id="purchasePrice" type="number" value="105"/></div>
-          <div><label>Selling price</label><input id="sellingPrice" type="number" value="199"/></div>
+          <div>
+            <label>Purchase price</label>
+            <input id="purchasePrice" type="number" value="105"/>
+          </div>
+          <div>
+            <label>Selling price</label>
+            <input id="sellingPrice" type="number" value="199"/>
+          </div>
         </div>
 
         <h4 style="margin-top:16px;color:#fff">Customer Split</h4>
         <div class="row">
-          <div><label>% buy 2 pairs initially</label><input id="pct2" type="number" value="20"/></div>
-          <div><label>% of 2-pair buyers who redeem voucher later</label><input id="pctVoucher" type="number" value="30"/></div>
+          <div>
+            <label>% buy 2 pairs</label>
+            <input id="pct2" type="number" value="20"/>
+          </div>
+          <div>
+            <label>% voucher redeemers</label>
+            <input id="pctVoucher" type="number" value="30"/>
+          </div>
         </div>
 
         <h4 style="margin-top:16px;color:#fff">Voucher</h4>
         <div class="row">
-          <div><label>Voucher amount (lei)</label><input id="voucher" type="number" value="50"/></div>
+          <div>
+            <label>Voucher amount (lei)</label>
+            <input id="voucher" type="number" value="50"/>
+          </div>
         </div>
-
         <button class="btn" id="calcBtn">Recalculate</button>
       </div>
 
@@ -63,40 +105,51 @@
         <h3>Outputs</h3>
         <div class="results">
           <div class="kpi">
-            <div class="item"><div class="muted">Avg profit/client (before CPA)</div><div id="avgProfitPre">—</div></div>
-            <div class="item"><div class="muted">Profit/client (after CPA)</div><div id="avgProfitPost">—</div></div>
-            <div class="item"><div class="muted">Profit/client (after CPA & fixed)</div><div id="avgProfitPostFixed">—</div></div>
-            <div class="item"><div class="muted">POAS</div><div id="poas">—</div></div>
+            <div class="item-block"><div class="muted">Avg profit/client (before CPA)</div><div id="avgProfitPre">—</div></div>
+            <div class="item-block"><div class="muted">Profit/client (after CPA)</div><div id="avgProfitPost">—</div></div>
+            <div class="item-block"><div class="muted">Profit/client (after CPA & fixed)</div><div id="avgProfitPostFixed" class="green">—</div></div>
+            <div class="item-block"><div class="muted">POAS</div><div id="poas">—</div></div>
           </div>
 
-          <h4 style="margin-top:12px;color:#fff">Per Segment</h4>
-          <div class="row">
-            <div><label>Profit 1-pair order</label><div id="profit1">—</div><div id="profit1Fixed" class="muted">—</div></div>
-            <div><label>Profit 2-pair order</label><div id="profit2">—</div><div id="profit2Fixed" class="muted">—</div></div>
-            <div><label>Profit voucher order (3rd pair)</label><div id="profitVoucher">—</div><div id="profitVoucherFixed" class="muted">—</div></div>
+          <h4 class="section-title">Per Segment</h4>
+          <div class="kpi">
+            <div class="item-block"><div class="muted">1-pair order</div><div id="profit1">—</div><div id="profit1Fixed" class="muted">—</div></div>
+            <div class="item-block"><div class="muted">2-pair order</div><div id="profit2">—</div><div id="profit2Fixed" class="muted">—</div></div>
+            <div class="item-block"><div class="muted">Voucher order (3rd pair)</div><div><span id="profitVoucher" class="violet">—</span> <span class="muted">(no CPA)</span></div><div id="profitVoucherFixed" class="muted">—</div></div>
           </div>
 
-          <h4 style="margin-top:12px;color:#fff">Daily Projection</h4>
-          <div class="row">
-            <div><label>Customers/day</label><input id="previewDaily" type="number" value="100"/></div>
-            <div><label>Profit/day</label><div id="profitDay">—</div></div>
-          </div>
-          <div class="row">
-            <div><label>Profit/month</label><div id="profitMonth">—</div></div>
-            <div><label>Break-even/day</label><div id="breakeven">—</div></div>
+          <h4 class="section-title">Daily Projection</h4>
+          <div class="kpi">
+            <div class="item-block"><div class="muted">Customers/day</div><input id="previewDaily" type="number" value="100"/></div>
+            <div class="item-block"><div class="muted">Profit/day</div><div id="profitDay" class="green">—</div></div>
+            <div class="item-block"><div class="muted">Profit/month</div><div id="profitMonth">—</div></div>
+            <div class="item-block"><div class="muted">Break-even/day</div><div><span id="breakeven" class="red"></span> <span class="white-bold">customers/day</span></div></div>
           </div>
 
-          <h4 style="margin-top:12px;color:#fff">Customer Breakdown (per 100 customers)</h4>
-          <div class="row">
-            <div><label># single-pair</label><div id="count1">—</div></div>
-            <div><label># two-pair</label><div id="count2">—</div></div>
-            <div><label># voucher redeemers</label><div id="countVoucher">—</div></div>
-          </div>
-          <div class="row">
-            <div style="flex:1"><label>Total profit (pre CPA/fixed)</label><div id="profit100">—</div></div>
+          <h4 class="section-title">Customer Breakdown (per 100 customers)</h4>
+          <div class="kpi">
+            <div class="item-block"><div class="muted"># single-pair</div><div id="count1">—</div></div>
+            <div class="item-block"><div class="muted"># two-pair</div><div id="count2">—</div></div>
+            <div class="item-block"><div class="muted"># voucher redeemers</div><div id="countVoucher">—</div></div>
+            <div class="item-block" style="flex:2"><div class="muted">Total profit (pre CPA/fixed)</div><div id="profit100">—</div></div>
           </div>
         </div>
-        <footer>Editable — change percentages, CPA, prices. Values update live.</footer>
+        <footer>
+          <strong>Explanations:</strong><br>
+          <b>CPA</b> – cost to acquire one new customer.<br>
+          <b>Fixed costs</b> – daily fixed expenses (excl. VAT).<br>
+          <b>Daily customers</b> – number of new customers per day.<br>
+          <b>Purchase/Selling price</b> – gross prices incl. VAT, converted internally to net.<br>
+          <b>% buy 2 pairs</b> – percentage of customers who buy 2 pairs initially.<br>
+          <b>% voucher redeemers</b> – percentage of 2-pair buyers who return with a voucher.<br>
+          <b>Voucher amount</b> – discount value applied on the 3rd pair.<br>
+          <b>Avg profit/client</b> – average profit per customer (before/after CPA & fixed).<br>
+          <b>POAS</b> – Profit Over Ad Spend (profit/CPA). >1 = profitable.<br>
+          <b>Per segment</b> – profit for 1-pair, 2-pair, and voucher customers.<br>
+          <b>Daily Projection</b> – simulation of daily and monthly profit.<br>
+          <b>Customer Breakdown</b> – distribution of customers per 100 and gross total profit.<br>
+          <b>Break-even/day</b> – how many customers/day are needed to cover CPA + fixed costs.<br>
+        </footer>
       </div>
     </div>
   </div>
@@ -122,14 +175,12 @@
 
       const margin1 = sellingNet - purchaseNet
       const margin2 = margin1*2
-      const marginVoucher = (sellingNet - purchaseNet) - voucher // no CPA for voucher order
+      const marginVoucher = (sellingNet - purchaseNet) - voucher
 
-      // counts per 100 customers
       const c2 = Math.round(100*pct2)
       const c1 = 100 - c2
       const cVoucher = Math.round(c2 * pctVoucher)
 
-      // average profit
       const avgPre=((c1*margin1)+(c2*margin2)+(cVoucher*marginVoucher))/100
       const avgPost=((c1*(margin1-cpa))+(c2*(margin2-cpa))+(cVoucher*marginVoucher))/100
       const poas=avgPre/(cpa||1)
@@ -141,10 +192,9 @@
       const profit100=(c1*margin1)+(c2*margin2)+(cVoucher*marginVoucher)
       const avgPostFixed=avgPost-(fixed/daily)
 
-      // segment profits
       const profit1CPA = margin1-cpa
       const profit2CPA = margin2-cpa
-      const profitVoucherCPA = marginVoucher // no CPA
+      const profitVoucherCPA = marginVoucher
 
       const profit1Fixed = profit1CPA-(fixed/daily)
       const profit2Fixed = profit2CPA-(fixed/daily)
@@ -153,7 +203,14 @@
       document.getElementById('avgProfitPre').innerText=fmt(avgPre)+" lei"
       document.getElementById('avgProfitPost').innerText=fmt(avgPost)+" lei"
       document.getElementById('avgProfitPostFixed').innerText=fmt(avgPostFixed)+" lei"
-      document.getElementById('poas').innerText=fmt(poas)+"×"
+
+      const poasElem=document.getElementById('poas')
+      poasElem.innerText=fmt(poas)+"×"
+      if(poas>3){
+        poasElem.className="blue"
+      } else {
+        poasElem.className="yellow"
+      }
 
       const previewDaily=document.getElementById('previewDaily')
       previewDaily.value=daily
@@ -163,8 +220,17 @@
       })
 
       document.getElementById('profitDay').innerText=fmt(profitDay)+" lei"
-      document.getElementById('profitMonth').innerText=fmt(profitMonth)+" lei"
-      document.getElementById('breakeven').innerText=breakeven+" customers/day"
+
+      const profitMonthElem=document.getElementById('profitMonth')
+      profitMonthElem.innerText=fmt(profitMonth)+" lei"
+      if(profitMonth>100000){
+        profitMonthElem.className="green"
+      } else {
+        profitMonthElem.className="yellow"
+      }
+
+      document.getElementById('breakeven').innerText=fmt(breakeven)
+      document.querySelector('#breakeven').className="red"
       document.getElementById('count1').innerText=c1+" customers"
       document.getElementById('count2').innerText=c2+" customers"
       document.getElementById('countVoucher').innerText=cVoucher+" customers"
@@ -174,7 +240,7 @@
       document.getElementById('profit1Fixed').innerText=fmt(profit1Fixed)+" lei (after CPA & fixed)"
       document.getElementById('profit2').innerText=fmt(profit2CPA)+" lei (after CPA)"
       document.getElementById('profit2Fixed').innerText=fmt(profit2Fixed)+" lei (after CPA & fixed)"
-      document.getElementById('profitVoucher').innerText=fmt(profitVoucherCPA)+" lei (no CPA)"
+      document.getElementById('profitVoucher').innerText=fmt(profitVoucherCPA)+" lei"
       document.getElementById('profitVoucherFixed').innerText=fmt(profitVoucherFixed)+" lei (after fixed)"
     }
 
