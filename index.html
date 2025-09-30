@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>POAS & Scaling Calculator — eCommerce</title>
+  <style>
+    :root{--bg:#0f1724;--card:#0b1220;--muted:#9aa6bf;--accent:#7dd3fc;--glass: rgba(255,255,255,0.04)}
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;color:#e6eef8;background:linear-gradient(180deg,#071025 0%, #071427 100%);}
+    .wrap{max-width:1200px;width:calc(100% - 40px);margin:28px auto;padding:20px;}
+    h1{font-size:20px;margin:0 0 10px}
+    .grid{display:grid;grid-template-columns:minmax(300px,1fr) 380px;gap:18px;align-items:start}
+    .card{background:var(--card);padding:18px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.6);}
+    label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+    input[type=number]{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:var(--glass);color:#e6eef8;font-size:14px}
+    .row{display:flex;gap:12px;flex-wrap:wrap}
+    .row > *{flex:1}
+    .btn{background:#0ea5e9;color:#021026;padding:10px 12px;border-radius:9px;border:0;cursor:pointer;font-weight:600;width:100%}
+    .results{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:12px;border-radius:10px;margin-top:12px;word-break:break-word}
+    .kpi{display:flex;gap:12px;flex-wrap:wrap}
+    .kpi .item{flex:1;min-width:150px;background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;text-align:center}
+    .muted{color:var(--muted);font-size:13px}
+    footer{margin-top:14px;color:var(--muted);font-size:13px}
+    @media (max-width:900px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>POAS & Scaling Calculator</h1>
+    <div class="grid">
+      <div class="card">
+        <h3>Inputs</h3>
+        <label>Cost to acquire 1 customer (CPA) — lei</label>
+        <input id="cpa" type="number" value="35" min="0" step="0.01" />
+
+        <div class="row" style="margin-top:12px;">
+          <div><label>Fixed costs / day (lei)</label><input id="fixed" type="number" value="2900" min="0" step="1"/></div>
+          <div><label>Daily customers acquired</label><input id="dailyCustomers" type="number" value="100" min="0" step="1"/></div>
+        </div>
+
+        <h4 style="margin-top:16px;color:#fff">Product Pricing (incl. VAT)</h4>
+        <div class="row">
+          <div><label>Purchase price</label><input id="purchasePrice" type="number" value="105"/></div>
+          <div><label>Selling price</label><input id="sellingPrice" type="number" value="199"/></div>
+        </div>
+
+        <h4 style="margin-top:16px;color:#fff">Customer Split</h4>
+        <div class="row">
+          <div><label>% buy 2 pairs initially</label><input id="pct2" type="number" value="20"/></div>
+          <div><label>% of 2-pair buyers who redeem voucher later</label><input id="pctVoucher" type="number" value="30"/></div>
+        </div>
+
+        <h4 style="margin-top:16px;color:#fff">Voucher</h4>
+        <div class="row">
+          <div><label>Voucher amount (lei)</label><input id="voucher" type="number" value="50"/></div>
+        </div>
+
+        <button class="btn" id="calcBtn">Recalculate</button>
+      </div>
+
+      <div class="card" id="preview">
+        <h3>Outputs</h3>
+        <div class="results">
+          <div class="kpi">
+            <div class="item"><div class="muted">Avg profit/client (before CPA)</div><div id="avgProfitPre">—</div></div>
+            <div class="item"><div class="muted">Profit/client (after CPA)</div><div id="avgProfitPost">—</div></div>
+            <div class="item"><div class="muted">Profit/client (after CPA & fixed)</div><div id="avgProfitPostFixed">—</div></div>
+            <div class="item"><div class="muted">POAS</div><div id="poas">—</div></div>
+          </div>
+
+          <h4 style="margin-top:12px;color:#fff">Per Segment</h4>
+          <div class="row">
+            <div><label>Profit 1-pair order</label><div id="profit1">—</div><div id="profit1Fixed" class="muted">—</div></div>
+            <div><label>Profit 2-pair order</label><div id="profit2">—</div><div id="profit2Fixed" class="muted">—</div></div>
+            <div><label>Profit voucher order (3rd pair)</label><div id="profitVoucher">—</div><div id="profitVoucherFixed" class="muted">—</div></div>
+          </div>
+
+          <h4 style="margin-top:12px;color:#fff">Daily Projection</h4>
+          <div class="row">
+            <div><label>Customers/day</label><input id="previewDaily" type="number" value="100"/></div>
+            <div><label>Profit/day</label><div id="profitDay">—</div></div>
+          </div>
+          <div class="row">
+            <div><label>Profit/month</label><div id="profitMonth">—</div></div>
+            <div><label>Break-even/day</label><div id="breakeven">—</div></div>
+          </div>
+
+          <h4 style="margin-top:12px;color:#fff">Customer Breakdown (per 100 customers)</h4>
+          <div class="row">
+            <div><label># single-pair</label><div id="count1">—</div></div>
+            <div><label># two-pair</label><div id="count2">—</div></div>
+            <div><label># voucher redeemers</label><div id="countVoucher">—</div></div>
+          </div>
+          <div class="row">
+            <div style="flex:1"><label>Total profit (pre CPA/fixed)</label><div id="profit100">—</div></div>
+          </div>
+        </div>
+        <footer>Editable — change percentages, CPA, prices. Values update live.</footer>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function num(v){return Number(v||0)}
+    function fmt(v){return (Math.round(v*100)/100).toLocaleString('en-US')}
+
+    function recalc(){
+      const cpa=num(document.getElementById('cpa').value)
+      const fixed=num(document.getElementById('fixed').value)
+      const daily=num(document.getElementById('dailyCustomers').value)
+      const pct2=num(document.getElementById('pct2').value)/100
+      const pctVoucher=num(document.getElementById('pctVoucher').value)/100
+      const voucher=num(document.getElementById('voucher').value)
+
+      const purchaseGross=num(document.getElementById('purchasePrice').value)
+      const sellingGross=num(document.getElementById('sellingPrice').value)
+      const VAT=0.21
+
+      const purchaseNet=purchaseGross/(1+VAT)
+      const sellingNet=sellingGross/(1+VAT)
+
+      const margin1 = sellingNet - purchaseNet
+      const margin2 = margin1*2
+      const marginVoucher = (sellingNet - purchaseNet) - voucher // no CPA for voucher order
+
+      // counts per 100 customers
+      const c2 = Math.round(100*pct2)
+      const c1 = 100 - c2
+      const cVoucher = Math.round(c2 * pctVoucher)
+
+      // average profit
+      const avgPre=((c1*margin1)+(c2*margin2)+(cVoucher*marginVoucher))/100
+      const avgPost=((c1*(margin1-cpa))+(c2*(margin2-cpa))+(cVoucher*marginVoucher))/100
+      const poas=avgPre/(cpa||1)
+
+      const profitDay=(daily*avgPost)-fixed
+      const profitMonth=profitDay*30
+      const breakeven=Math.ceil((fixed+(cpa*daily))/(avgPre||1))
+
+      const profit100=(c1*margin1)+(c2*margin2)+(cVoucher*marginVoucher)
+      const avgPostFixed=avgPost-(fixed/daily)
+
+      // segment profits
+      const profit1CPA = margin1-cpa
+      const profit2CPA = margin2-cpa
+      const profitVoucherCPA = marginVoucher // no CPA
+
+      const profit1Fixed = profit1CPA-(fixed/daily)
+      const profit2Fixed = profit2CPA-(fixed/daily)
+      const profitVoucherFixed = profitVoucherCPA-(fixed/daily)
+
+      document.getElementById('avgProfitPre').innerText=fmt(avgPre)+" lei"
+      document.getElementById('avgProfitPost').innerText=fmt(avgPost)+" lei"
+      document.getElementById('avgProfitPostFixed').innerText=fmt(avgPostFixed)+" lei"
+      document.getElementById('poas').innerText=fmt(poas)+"×"
+
+      const previewDaily=document.getElementById('previewDaily')
+      previewDaily.value=daily
+      previewDaily.addEventListener('input',e=>{
+        document.getElementById('dailyCustomers').value=e.target.value
+        recalc()
+      })
+
+      document.getElementById('profitDay').innerText=fmt(profitDay)+" lei"
+      document.getElementById('profitMonth').innerText=fmt(profitMonth)+" lei"
+      document.getElementById('breakeven').innerText=breakeven+" customers/day"
+      document.getElementById('count1').innerText=c1+" customers"
+      document.getElementById('count2').innerText=c2+" customers"
+      document.getElementById('countVoucher').innerText=cVoucher+" customers"
+      document.getElementById('profit100').innerText=fmt(profit100)+" lei"
+
+      document.getElementById('profit1').innerText=fmt(profit1CPA)+" lei (after CPA)"
+      document.getElementById('profit1Fixed').innerText=fmt(profit1Fixed)+" lei (after CPA & fixed)"
+      document.getElementById('profit2').innerText=fmt(profit2CPA)+" lei (after CPA)"
+      document.getElementById('profit2Fixed').innerText=fmt(profit2Fixed)+" lei (after CPA & fixed)"
+      document.getElementById('profitVoucher').innerText=fmt(profitVoucherCPA)+" lei (no CPA)"
+      document.getElementById('profitVoucherFixed').innerText=fmt(profitVoucherFixed)+" lei (after fixed)"
+    }
+
+    document.querySelectorAll('input').forEach(i=>i.addEventListener('input',recalc))
+    document.getElementById('calcBtn').addEventListener('click',recalc)
+    recalc()
+  </script>
+</body>
+</html>
