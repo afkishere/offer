@@ -6,30 +6,30 @@
   <title>POAS & Scaling Calculator — eCommerce</title>
   <style>
     :root{
-      --bg:#0f1724;--card:#0b1220;--muted:#9aa6bf;--accent:#7dd3fc;--glass: rgba(255,255,255,0.04);--text:#e6eef8;
+      --bg:#0f1724;--muted:#9aa6bf;--accent:#7dd3fc;--text:#e6eef8;
       --green:#16a34a;--yellow:#facc15;--blue:#3b82f6;--violet:#a78bfa;--red:#ef4444;--label-strong:#ffffff;
-      --block-bg:rgba(255,255,255,0.05);
+      --block-bg:rgba(255,255,255,0.06);--panel-bg:rgba(15,23,36,0.85);--panel-border:1px solid rgba(255,255,255,0.08);
     }
     body[data-theme="light"]{
-      --bg:#f4f7fb;--card:#ffffff;--muted:#5b6473;--accent:#0369a1;--glass: rgba(2,6,23,0.06);--text:#0b1220;
+      --bg:#f4f7fb;--muted:#5b6473;--accent:#0369a1;--text:#0b1220;
       --green:#15803d;--yellow:#ca8a04;--blue:#2563eb;--violet:#7c3aed;--red:#dc2626;--label-strong:#0b1220;
-      --block-bg:rgba(2,6,23,0.04);
+      --block-bg:rgba(0,0,0,0.04);--panel-bg:rgba(255,255,255,0.9);--panel-border:1px solid rgba(0,0,0,0.08);
     }
     *,*::before,*::after{box-sizing:border-box}
-    html,body{height:100%;margin:0}
+    html,body{height:100%;margin:0;width:100%}
     body{font-family:Inter, ui-sans-serif, system-ui;color:var(--text);background:linear-gradient(180deg,var(--bg) 0%, var(--bg) 100%);}    
-    .wrap{max-width:1200px;width:calc(100% - 40px);margin:28px auto;padding:20px;position:relative}
+    .wrap{width:100%;margin:0;padding:20px;position:relative}
     h1{text-align:center;font-size:22px;margin-bottom:16px}
-    .grid{display:grid;grid-template-columns:1fr 380px;gap:18px}
-    .panel{padding:18px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;width:100%}
+    .panel{padding:20px;border:var(--panel-border);border-radius:16px;background:var(--panel-bg);box-shadow:0 8px 20px rgba(0,0,0,0.25)}
     label{display:block;font-size:13px;color:var(--text);margin-bottom:4px}
-    input[type=number]{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(2,6,23,0.15);background:var(--glass);color:var(--text);font-size:14px}
+    input[type=number]{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.2);background:rgba(255,255,255,0.08);color:var(--text);font-size:14px}
     .row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px}
     .row > *{flex:1;min-width:140px}
     .btn{background:#0ea5e9;color:#021026;padding:10px 12px;border-radius:9px;border:0;cursor:pointer;font-weight:600;width:100%;margin-top:8px}
     .kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px}
     .kpi > .item-block:nth-child(4n){grid-column:1/-1}
-    .item-block{background:var(--block-bg);padding:10px;border-radius:8px;text-align:center}
+    .item-block{background:var(--block-bg);padding:12px;border-radius:10px;text-align:center}
     .muted{color:var(--muted);font-size:13px}
     .green{color:var(--green);font-weight:700;font-size:18px}
     .yellow{color:var(--yellow);font-weight:700;font-size:18px}
@@ -39,7 +39,7 @@
     .white-bold{color:var(--label-strong);font-weight:700;font-size:13px}
     h3,h4{margin-top:0;margin-bottom:8px;color:var(--accent)}
     footer{margin-top:14px;color:var(--muted);font-size:12px;line-height:1.4}
-    @media(max-width:1100px){.grid{grid-template-columns:1fr}.wrap{padding:16px}}
+    @media(max-width:1100px){.grid{grid-template-columns:1fr}.wrap{padding:12px}}
     .theme-toggle{position:absolute;right:8px;top:8px;background:transparent;border:1px solid rgba(2,6,23,0.2);padding:6px 10px;border-radius:8px;color:var(--text);cursor:pointer}
   </style>
 </head>
