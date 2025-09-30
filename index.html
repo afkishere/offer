@@ -6,133 +6,88 @@
   <title>POAS & Scaling Calculator — eCommerce</title>
   <style>
     :root{
-      --bg:#0f1724;
-      --card:#0b1220;
-      --muted:#9aa6bf;
-      --accent:#7dd3fc;
-      --glass: rgba(255,255,255,0.04);
-      --green:#22c55e;
-      --yellow:#facc15;
-      --blue:#3b82f6;
-      --violet:#a78bfa;
-      --red:#ef4444;
+      --bg:#0f1724;--card:#0b1220;--muted:#9aa6bf;--accent:#7dd3fc;--glass: rgba(255,255,255,0.04);--text:#e6eef8;
+      --green:#16a34a;--yellow:#facc15;--blue:#3b82f6;--violet:#a78bfa;--red:#ef4444;--label-strong:#ffffff;
+      --block-bg:rgba(255,255,255,0.05);
+    }
+    body[data-theme="light"]{
+      --bg:#f4f7fb;--card:#ffffff;--muted:#5b6473;--accent:#0369a1;--glass: rgba(2,6,23,0.06);--text:#0b1220;
+      --green:#15803d;--yellow:#ca8a04;--blue:#2563eb;--violet:#7c3aed;--red:#dc2626;--label-strong:#0b1220;
+      --block-bg:rgba(2,6,23,0.04);
     }
     *,*::before,*::after{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;color:#e6eef8;background:linear-gradient(180deg,#071025 0%, #071427 100%);}
-    .wrap{max-width:1200px;width:calc(100% - 40px);margin:28px auto;padding:20px;}
-    h1{font-size:22px;margin:0 0 16px;text-align:center}
-    .grid{display:grid;grid-template-columns:1fr 380px;gap:18px;align-items:start}
-    .card{background:var(--card);padding:18px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.6);}
-    label{display:block;font-size:13px;color:#fff;margin-bottom:4px}
-    input[type=number]{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:var(--glass);color:#e6eef8;font-size:14px}
+    html,body{height:100%;margin:0}
+    body{font-family:Inter, ui-sans-serif, system-ui;color:var(--text);background:linear-gradient(180deg,var(--bg) 0%, var(--bg) 100%);}    
+    .wrap{max-width:1200px;width:calc(100% - 40px);margin:28px auto;padding:20px;position:relative}
+    h1{text-align:center;font-size:22px;margin-bottom:16px}
+    .grid{display:grid;grid-template-columns:1fr 380px;gap:18px}
+    .panel{padding:18px}
+    label{display:block;font-size:13px;color:var(--text);margin-bottom:4px}
+    input[type=number]{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(2,6,23,0.15);background:var(--glass);color:var(--text);font-size:14px}
     .row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px}
     .row > *{flex:1;min-width:140px}
     .btn{background:#0ea5e9;color:#021026;padding:10px 12px;border-radius:9px;border:0;cursor:pointer;font-weight:600;width:100%;margin-top:8px}
-    .results{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:12px;border-radius:10px;margin-top:12px;word-break:break-word}
-    .kpi{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px}
-    .item-block{flex:1;min-width:150px;background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;text-align:center;margin-bottom:12px}
+    .kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px}
+    .kpi > .item-block:nth-child(4n){grid-column:1/-1}
+    .item-block{background:var(--block-bg);padding:10px;border-radius:8px;text-align:center}
     .muted{color:var(--muted);font-size:13px}
     .green{color:var(--green);font-weight:700;font-size:18px}
     .yellow{color:var(--yellow);font-weight:700;font-size:18px}
     .blue{color:var(--blue);font-weight:700;font-size:18px}
     .violet{color:var(--violet);font-weight:700;font-size:18px}
     .red{color:var(--red);font-weight:700;font-size:18px}
-    .white-bold{color:#fff;font-weight:700;font-size:13px}
-    footer{margin-top:14px;color:var(--muted);font-size:12px;text-align:left;line-height:1.4}
-    @media (max-width:900px){.grid{grid-template-columns:1fr}.wrap{padding:12px}h1{font-size:20px}}
-    @media (max-width:600px){label{font-size:12px}input[type=number]{font-size:13px;padding:8px}}
-    h4.section-title{margin-top:12px;color:#7dd3fc;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:4px;margin-bottom:8px;font-size:15px}
+    .white-bold{color:var(--label-strong);font-weight:700;font-size:13px}
+    h3,h4{margin-top:0;margin-bottom:8px;color:var(--accent)}
+    footer{margin-top:14px;color:var(--muted);font-size:12px;line-height:1.4}
+    @media(max-width:1100px){.grid{grid-template-columns:1fr}.wrap{padding:16px}}
+    .theme-toggle{position:absolute;right:8px;top:8px;background:transparent;border:1px solid rgba(2,6,23,0.2);padding:6px 10px;border-radius:8px;color:var(--text);cursor:pointer}
   </style>
 </head>
 <body>
   <div class="wrap">
+    <button id="themeToggle" class="theme-toggle">🌙</button>
     <h1>POAS & Scaling Calculator</h1>
     <div class="grid">
-      <div class="card">
+      <div class="panel">
         <h3>Inputs</h3>
-        <div class="row">
-          <div>
-            <label>CPA (lei)</label>
-            <input id="cpa" type="number" value="35" min="0" step="0.01" />
-          </div>
-          <div>
-            <label>Fixed costs / day (lei, excl. VAT)</label>
-            <input id="fixed" type="number" value="2900" min="0" step="1"/>
-          </div>
-        </div>
-        <div class="row">
-          <div>
-            <label>Daily customers acquired</label>
-            <input id="dailyCustomers" type="number" value="100" min="0" step="1"/>
-          </div>
-        </div>
-
-        <h4 style="margin-top:16px;color:#fff">Product Pricing (incl. VAT)</h4>
-        <div class="row">
-          <div>
-            <label>Purchase price</label>
-            <input id="purchasePrice" type="number" value="105"/>
-          </div>
-          <div>
-            <label>Selling price</label>
-            <input id="sellingPrice" type="number" value="199"/>
-          </div>
-        </div>
-
-        <h4 style="margin-top:16px;color:#fff">Customer Split</h4>
-        <div class="row">
-          <div>
-            <label>% buy 2 pairs</label>
-            <input id="pct2" type="number" value="20"/>
-          </div>
-          <div>
-            <label>% voucher redeemers</label>
-            <input id="pctVoucher" type="number" value="30"/>
-          </div>
-        </div>
-
-        <h4 style="margin-top:16px;color:#fff">Voucher</h4>
-        <div class="row">
-          <div>
-            <label>Voucher amount (lei)</label>
-            <input id="voucher" type="number" value="50"/>
-          </div>
-        </div>
+        <div class="row"><div><label>CPA (lei)</label><input id="cpa" type="number" value="35"/></div><div><label>Fixed costs/day</label><input id="fixed" type="number" value="2900"/></div></div>
+        <div class="row"><div><label>Daily customers</label><input id="dailyCustomers" type="number" value="100"/></div></div>
+        <h4>Product Pricing (incl. VAT)</h4>
+        <div class="row"><div><label>Purchase price</label><input id="purchasePrice" type="number" value="105"/></div><div><label>Selling price</label><input id="sellingPrice" type="number" value="199"/></div></div>
+        <h4>Customer Split</h4>
+        <div class="row"><div><label>% buy 2 pairs</label><input id="pct2" type="number" value="20"/></div><div><label>% voucher redeemers</label><input id="pctVoucher" type="number" value="30"/></div></div>
+        <h4>Voucher</h4>
+        <div class="row"><div><label>Voucher amount (lei)</label><input id="voucher" type="number" value="50"/></div></div>
         <button class="btn" id="calcBtn">Recalculate</button>
       </div>
-
-      <div class="card" id="preview">
+      <div class="panel">
         <h3>Outputs</h3>
-        <div class="results">
-          <div class="kpi">
-            <div class="item-block"><div class="muted">Avg profit/client (before CPA)</div><div id="avgProfitPre">—</div></div>
-            <div class="item-block"><div class="muted">Profit/client (after CPA)</div><div id="avgProfitPost">—</div></div>
-            <div class="item-block"><div class="muted">Profit/client (after CPA & fixed)</div><div id="avgProfitPostFixed" class="green">—</div></div>
-            <div class="item-block"><div class="muted">POAS</div><div id="poas">—</div></div>
-          </div>
-
-          <h4 class="section-title">Per Segment</h4>
-          <div class="kpi">
-            <div class="item-block"><div class="muted">1-pair order</div><div id="profit1">—</div><div id="profit1Fixed" class="muted">—</div></div>
-            <div class="item-block"><div class="muted">2-pair order</div><div id="profit2">—</div><div id="profit2Fixed" class="muted">—</div></div>
-            <div class="item-block"><div class="muted">Voucher order (3rd pair)</div><div><span id="profitVoucher" class="violet">—</span> <span class="muted">(no CPA)</span></div><div id="profitVoucherFixed" class="muted">—</div></div>
-          </div>
-
-          <h4 class="section-title">Daily Projection</h4>
-          <div class="kpi">
-            <div class="item-block"><div class="muted">Customers/day</div><input id="previewDaily" type="number" value="100"/></div>
-            <div class="item-block"><div class="muted">Profit/day</div><div id="profitDay" class="green">—</div></div>
-            <div class="item-block"><div class="muted">Profit/month</div><div id="profitMonth">—</div></div>
-            <div class="item-block"><div class="muted">Break-even/day</div><div><span id="breakeven" class="red"></span> <span class="white-bold">customers/day</span></div></div>
-          </div>
-
-          <h4 class="section-title">Customer Breakdown (per 100 customers)</h4>
-          <div class="kpi">
-            <div class="item-block"><div class="muted"># single-pair</div><div id="count1">—</div></div>
-            <div class="item-block"><div class="muted"># two-pair</div><div id="count2">—</div></div>
-            <div class="item-block"><div class="muted"># voucher redeemers</div><div id="countVoucher">—</div></div>
-            <div class="item-block" style="flex:2"><div class="muted">Total profit (pre CPA/fixed)</div><div id="profit100">—</div></div>
-          </div>
+        <h4>Overall</h4>
+        <div class="kpi">
+          <div class="item-block"><div class="muted">Avg profit/client (before CPA)</div><div id="avgProfitPre">—</div></div>
+          <div class="item-block"><div class="muted">Profit/client (after CPA)</div><div id="avgProfitPost">—</div></div>
+          <div class="item-block"><div class="muted">Profit/client (after CPA & fixed)</div><div id="avgProfitPostFixed">—</div></div>
+          <div class="item-block"><div class="muted">POAS</div><div id="poas">—</div></div>
+        </div>
+        <h4>Per Segment</h4>
+        <div class="kpi">
+          <div class="item-block"><div class="muted">1-pair order</div><div id="profit1">—</div><div id="profit1Fixed" class="muted">—</div></div>
+          <div class="item-block"><div class="muted">2-pair order</div><div id="profit2">—</div><div id="profit2Fixed" class="muted">—</div></div>
+          <div class="item-block"><div class="muted">Voucher order (3rd pair)</div><div class="violet" id="profitVoucher">—</div><div id="profitVoucherFixed" class="muted">—</div></div>
+        </div>
+        <h4>Daily Projection</h4>
+        <div class="kpi">
+          <div class="item-block"><div class="muted">Profit/day (with vouchers)</div><div id="profitDay" class="green">—</div></div>
+          <div class="item-block"><div class="muted">Profit/day (no vouchers)</div><div id="profitDayNoVoucher" class="yellow">—</div></div>
+          <div class="item-block"><div class="muted">Profit/month</div><div id="profitMonth">—</div></div>
+          <div class="item-block"><div class="muted">Break-even/day</div><div><span id="breakeven" class="red"></span> <span class="white-bold">customers/day</span></div></div>
+        </div>
+        <h4>Customer Breakdown (per 100 customers)</h4>
+        <div class="kpi">
+          <div class="item-block"><div class="muted"># single-pair</div><div id="count1">—</div></div>
+          <div class="item-block"><div class="muted"># two-pair</div><div id="count2">—</div></div>
+          <div class="item-block"><div class="muted"># voucher redeemers</div><div id="countVoucher">—</div></div>
+          <div class="item-block"><div class="muted">Total profit (pre CPA/fixed)</div><div id="profit100">—</div></div>
         </div>
         <footer>
           <strong>Explanations:</strong><br>
@@ -153,100 +108,62 @@
       </div>
     </div>
   </div>
-
   <script>
     function num(v){return Number(v||0)}
     function fmt(v){return (Math.round(v*100)/100).toLocaleString('en-US')}
-
+    (function(){
+      const stored=localStorage.getItem('theme');
+      const sysDark=window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const start=stored|| (sysDark? 'dark':'light');
+      document.body.setAttribute('data-theme',start);
+      document.getElementById('themeToggle').innerText=(start==='dark'? '🌙':'🌞');
+    })();
+    document.getElementById('themeToggle').addEventListener('click',()=>{
+      const cur=document.body.getAttribute('data-theme');
+      const next=cur==='dark'?'light':'dark';
+      document.body.setAttribute('data-theme',next);
+      localStorage.setItem('theme',next);
+      document.getElementById('themeToggle').innerText=(next==='dark'? '🌙':'🌞');
+    });
     function recalc(){
-      const cpa=num(document.getElementById('cpa').value)
-      const fixed=num(document.getElementById('fixed').value)
-      const daily=num(document.getElementById('dailyCustomers').value)
-      const pct2=num(document.getElementById('pct2').value)/100
-      const pctVoucher=num(document.getElementById('pctVoucher').value)/100
-      const voucher=num(document.getElementById('voucher').value)
-
-      const purchaseGross=num(document.getElementById('purchasePrice').value)
-      const sellingGross=num(document.getElementById('sellingPrice').value)
-      const VAT=0.21
-
-      const purchaseNet=purchaseGross/(1+VAT)
-      const sellingNet=sellingGross/(1+VAT)
-
-      const margin1 = sellingNet - purchaseNet
-      const margin2 = margin1*2
-      const marginVoucher = (sellingNet - purchaseNet) - voucher
-
-      const c2 = Math.round(100*pct2)
-      const c1 = 100 - c2
-      const cVoucher = Math.round(c2 * pctVoucher)
-
-      const avgPre=((c1*margin1)+(c2*margin2)+(cVoucher*marginVoucher))/100
-      const avgPost=((c1*(margin1-cpa))+(c2*(margin2-cpa))+(cVoucher*marginVoucher))/100
-      const poas=avgPre/(cpa||1)
-
-      const profitDay=(daily*avgPost)-fixed
-      const profitMonth=profitDay*30
-      const breakeven=Math.ceil((fixed+(cpa*daily))/(avgPre||1))
-
-      const profit100=(c1*margin1)+(c2*margin2)+(cVoucher*marginVoucher)
-      const avgPostFixed=avgPost-(fixed/daily)
-
-      const profit1CPA = margin1-cpa
-      const profit2CPA = margin2-cpa
-      const profitVoucherCPA = marginVoucher
-
-      const profit1Fixed = profit1CPA-(fixed/daily)
-      const profit2Fixed = profit2CPA-(fixed/daily)
-      const profitVoucherFixed = profitVoucherCPA-(fixed/daily)
-
-      document.getElementById('avgProfitPre').innerText=fmt(avgPre)+" lei"
-      document.getElementById('avgProfitPost').innerText=fmt(avgPost)+" lei"
-      document.getElementById('avgProfitPostFixed').innerText=fmt(avgPostFixed)+" lei"
-
-      const poasElem=document.getElementById('poas')
-      poasElem.innerText=fmt(poas)+"×"
-      if(poas>3){
-        poasElem.className="blue"
-      } else {
-        poasElem.className="yellow"
-      }
-
-      const previewDaily=document.getElementById('previewDaily')
-      previewDaily.value=daily
-      previewDaily.addEventListener('input',e=>{
-        document.getElementById('dailyCustomers').value=e.target.value
-        recalc()
-      })
-
-      document.getElementById('profitDay').innerText=fmt(profitDay)+" lei"
-
-      const profitMonthElem=document.getElementById('profitMonth')
-      profitMonthElem.innerText=fmt(profitMonth)+" lei"
-      if(profitMonth>100000){
-        profitMonthElem.className="green"
-      } else {
-        profitMonthElem.className="yellow"
-      }
-
-      document.getElementById('breakeven').innerText=fmt(breakeven)
-      document.querySelector('#breakeven').className="red"
-      document.getElementById('count1').innerText=c1+" customers"
-      document.getElementById('count2').innerText=c2+" customers"
-      document.getElementById('countVoucher').innerText=cVoucher+" customers"
-      document.getElementById('profit100').innerText=fmt(profit100)+" lei"
-
-      document.getElementById('profit1').innerText=fmt(profit1CPA)+" lei (after CPA)"
-      document.getElementById('profit1Fixed').innerText=fmt(profit1Fixed)+" lei (after CPA & fixed)"
-      document.getElementById('profit2').innerText=fmt(profit2CPA)+" lei (after CPA)"
-      document.getElementById('profit2Fixed').innerText=fmt(profit2Fixed)+" lei (after CPA & fixed)"
-      document.getElementById('profitVoucher').innerText=fmt(profitVoucherCPA)+" lei"
-      document.getElementById('profitVoucherFixed').innerText=fmt(profitVoucherFixed)+" lei (after fixed)"
+      const cpa=num(document.getElementById('cpa').value),fixed=num(document.getElementById('fixed').value),daily=num(document.getElementById('dailyCustomers').value),pct2=num(document.getElementById('pct2').value)/100,pctVoucher=num(document.getElementById('pctVoucher').value)/100,voucher=num(document.getElementById('voucher').value),purchaseGross=num(document.getElementById('purchasePrice').value),sellingGross=num(document.getElementById('sellingPrice').value),VAT=0.21;
+      const purchaseNet=purchaseGross/(1+VAT),sellingNet=sellingGross/(1+VAT);
+      const margin1=sellingNet-purchaseNet,margin2=margin1*2,marginVoucher=(sellingNet-purchaseNet)-voucher;
+      const c2=Math.round(100*pct2),c1=100-c2,cVoucher=Math.round(c2*pctVoucher);
+      const avgPre=((c1*margin1)+(c2*margin2)+(cVoucher*marginVoucher))/100;
+      const avgPost=((c1*(margin1-cpa))+(c2*(margin2-cpa))+(cVoucher*marginVoucher))/100;
+      const avgPostNoVoucher=((c1*(margin1-cpa))+(c2*(margin2-cpa)))/100;
+      const poas=avgPre/(cpa||1);
+      const profitDay=(daily*avgPost)-fixed;
+      const profitDayNoVoucher=(daily*avgPostNoVoucher)-fixed;
+      const profitMonth=profitDay*30;
+      const breakeven=Math.ceil((fixed+(cpa*daily))/(avgPre||1));
+      document.getElementById('avgProfitPre').innerText=fmt(avgPre)+" lei";
+      document.getElementById('avgProfitPost').innerText=fmt(avgPost)+" lei";
+      document.getElementById('avgProfitPostFixed').innerText=fmt(avgPost-(fixed/daily))+" lei";
+      const poasElem=document.getElementById('poas');
+      poasElem.innerText=fmt(poas)+"×";
+      poasElem.className=poas>3?"blue":"yellow";
+      document.getElementById('profitDay').innerText=fmt(profitDay)+" lei";
+      document.getElementById('profitDayNoVoucher').innerText=fmt(profitDayNoVoucher)+" lei";
+      const profitMonthElem=document.getElementById('profitMonth');
+      profitMonthElem.innerText=fmt(profitMonth)+" lei";
+      profitMonthElem.className=profitMonth>100000?"green":"yellow";
+      document.getElementById('breakeven').innerText=fmt(breakeven);
+      document.getElementById('count1').innerText=c1+" customers";
+      document.getElementById('count2').innerText=c2+" customers";
+      document.getElementById('countVoucher').innerText=cVoucher+" customers";
+      document.getElementById('profit100').innerText=fmt((c1*margin1)+(c2*margin2)+(cVoucher*marginVoucher))+" lei";
+      document.getElementById('profit1').innerText=fmt(margin1-cpa)+" lei (after CPA)";
+      document.getElementById('profit1Fixed').innerText=fmt((margin1-cpa)-(fixed/daily))+" lei (after CPA & fixed)";
+      document.getElementById('profit2').innerText=fmt(margin2-cpa)+" lei (after CPA)";
+      document.getElementById('profit2Fixed').innerText=fmt((margin2-cpa)-(fixed/daily))+" lei (after CPA & fixed)";
+      document.getElementById('profitVoucher').innerText=fmt(marginVoucher)+" lei";
+      document.getElementById('profitVoucherFixed').innerText=fmt(marginVoucher-(fixed/daily))+" lei (after fixed)";
     }
-
-    document.querySelectorAll('input').forEach(i=>i.addEventListener('input',recalc))
-    document.getElementById('calcBtn').addEventListener('click',recalc)
-    recalc()
+    document.querySelectorAll('input').forEach(i=>i.addEventListener('input',recalc));
+    document.getElementById('calcBtn').addEventListener('click',recalc);
+    recalc();
   </script>
 </body>
 </html>
