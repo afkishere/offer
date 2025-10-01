@@ -65,7 +65,7 @@
         <div class="kpi">
           <div class="item-block"><div class="muted">Avg profit/client (before CPA)</div><div id="avgProfitPre">—</div></div>
           <div class="item-block"><div class="muted">Profit/client (after CPA)</div><div id="avgProfitPost">—</div></div>
-          <div class="item-block"><div class="muted">Profit/client (after CPA & fixed)</div><div id="avgProfitPostFixed">—</div></div>
+          <div class="item-block"><div class="muted">Profit/client (after CPA & fixed)</div><div id="avgProfitPostFixed" class="green">—</div></div>
           <div class="item-block"><div class="muted">POAS</div><div id="poas">—</div></div>
         </div>
         <h4>Per Segment</h4>
@@ -74,14 +74,14 @@
           <div class="item-block"><div class="muted">2-pair order</div><div id="profit2">—</div><div id="profit2Fixed" class="muted">—</div></div>
           <div class="item-block"><div class="muted">Voucher order (3rd pair)</div><div class="violet" id="profitVoucher">—</div><div id="profitVoucherFixed" class="muted">—</div></div>
         </div>
-        <h4>Profit Projection</h4>
+        <h4>Daily Projection</h4>
         <div class="kpi">
-          <div class="item-block"><div class="muted">Profit With Vouchers</div><div id="profitDay" class="green">—</div></div>
-          <div class="item-block"><div class="muted">Profit No vouchers</div><div id="profitDayNoVoucher" class="yellow">—</div></div>
-          <div class="item-block"><div class="muted">Total Profit/month</div><div id="profitMonth">—</div></div>
+          <div class="item-block"><div class="muted">Profit/day (with vouchers)</div><div id="profitDay" class="green">—</div></div>
+          <div class="item-block"><div class="muted">Profit/day (no vouchers)</div><div id="profitDayNoVoucher" class="yellow">—</div></div>
+          <div class="item-block"><div class="muted">Profit/month</div><div id="profitMonth">—</div></div>
           <div class="item-block"><div class="muted">Break-even/day</div><div><span id="breakeven" class="red"></span> <span class="white-bold">customers/day</span></div></div>
         </div>
-        <h4>Customer Breakdown (per 100 customers)</h4>
+        <h4>Customer Breakdown (per daily customers)</h4>
         <div class="kpi">
           <div class="item-block"><div class="muted"># single-pair</div><div id="count1">—</div></div>
           <div class="item-block"><div class="muted"># two-pair</div><div id="count2">—</div></div>
@@ -101,68 +101,107 @@
           <b>POAS</b> – Profit Over Ad Spend (profit/CPA). >1 = profitable.<br>
           <b>Per segment</b> – profit for 1-pair, 2-pair, and voucher customers.<br>
           <b>Daily Projection</b> – simulation of daily and monthly profit.<br>
-          <b>Customer Breakdown</b> – distribution of customers per 100 and gross total profit.<br>
+          <b>Customer Breakdown</b> – distribution of customers per daily customers and gross total profit.<br>
           <b>Break-even/day</b> – how many customers/day are needed to cover CPA + fixed costs.<br>
         </footer>
       </div>
     </div>
   </div>
   <script>
-    function num(v){return Number(v||0)}
-    function fmt(v){return (Math.round(v*100)/100).toLocaleString('en-US')}
-    (function(){
-      const stored=localStorage.getItem('theme');
-      const sysDark=window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const start=stored|| (sysDark? 'dark':'light');
-      document.body.setAttribute('data-theme',start);
-      document.getElementById('themeToggle').innerText=(start==='dark'? '🌙':'🌞');
-    })();
-    document.getElementById('themeToggle').addEventListener('click',()=>{
-      const cur=document.body.getAttribute('data-theme');
-      const next=cur==='dark'?'light':'dark';
-      document.body.setAttribute('data-theme',next);
-      localStorage.setItem('theme',next);
-      document.getElementById('themeToggle').innerText=(next==='dark'? '🌙':'🌞');
-    });
-    function recalc(){
-      const cpa=num(document.getElementById('cpa').value),fixed=num(document.getElementById('fixed').value),daily=num(document.getElementById('dailyCustomers').value),pct2=num(document.getElementById('pct2').value)/100,pctVoucher=num(document.getElementById('pctVoucher').value)/100,voucher=num(document.getElementById('voucher').value),purchaseGross=num(document.getElementById('purchasePrice').value),sellingGross=num(document.getElementById('sellingPrice').value),VAT=0.21;
-      const purchaseNet=purchaseGross/(1+VAT),sellingNet=sellingGross/(1+VAT);
-      const margin1=sellingNet-purchaseNet,margin2=margin1*2,marginVoucher=(sellingNet-purchaseNet)-voucher;
-      const c2=Math.round(100*pct2),c1=100-c2,cVoucher=Math.round(c2*pctVoucher);
-      const avgPre=((c1*margin1)+(c2*margin2)+(cVoucher*marginVoucher))/100;
-      const avgPost=((c1*(margin1-cpa))+(c2*(margin2-cpa))+(cVoucher*marginVoucher))/100;
-      const avgPostNoVoucher=((c1*(margin1-cpa))+(c2*(margin2-cpa)))/100;
-      const poas=avgPre/(cpa||1);
-      const profitDay=(daily*avgPost)-fixed;
-      const profitDayNoVoucher=(daily*avgPostNoVoucher)-fixed;
-      const profitMonth=profitDay*30;
-      const breakeven=Math.ceil((fixed+(cpa*daily))/(avgPre||1));
-      document.getElementById('avgProfitPre').innerText=fmt(avgPre)+" lei";
-      document.getElementById('avgProfitPost').innerText=fmt(avgPost)+" lei";
-      document.getElementById('avgProfitPostFixed').innerText=fmt(avgPost-(fixed/daily))+" lei";
-      const poasElem=document.getElementById('poas');
-      poasElem.innerText=fmt(poas)+"×";
-      poasElem.className=poas>3?"blue":"yellow";
-      document.getElementById('profitDay').innerText=fmt(profitDay)+" lei";
-      document.getElementById('profitDayNoVoucher').innerText=fmt(profitDayNoVoucher)+" lei";
-      const profitMonthElem=document.getElementById('profitMonth');
-      profitMonthElem.innerText=fmt(profitMonth)+" lei";
-      profitMonthElem.className=profitMonth>100000?"green":"yellow";
-      document.getElementById('breakeven').innerText=fmt(breakeven);
-      document.getElementById('count1').innerText=c1+" customers";
-      document.getElementById('count2').innerText=c2+" customers";
-      document.getElementById('countVoucher').innerText=cVoucher+" customers";
-      document.getElementById('profit100').innerText=fmt((c1*margin1)+(c2*margin2)+(cVoucher*marginVoucher))+" lei";
-      document.getElementById('profit1').innerText=fmt(margin1-cpa)+" lei (after CPA)";
-      document.getElementById('profit1Fixed').innerText=fmt((margin1-cpa)-(fixed/daily))+" lei (after CPA & fixed)";
-      document.getElementById('profit2').innerText=fmt(margin2-cpa)+" lei (after CPA)";
-      document.getElementById('profit2Fixed').innerText=fmt((margin2-cpa)-(fixed/daily))+" lei (after CPA & fixed)";
-      document.getElementById('profitVoucher').innerText=fmt(marginVoucher)+" lei";
-      document.getElementById('profitVoucherFixed').innerText=fmt(marginVoucher-(fixed/daily))+" lei (after fixed)";
+(function(){
+  function num(v){return Number(v||0)}
+  function fmt(v){return (Math.round(v*100)/100).toLocaleString('en-US')}
+
+  function applyThemeInit(){
+    var stored=localStorage.getItem('theme');
+    var sysDark=window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var start=stored || (sysDark? 'dark':'light');
+    document.body.setAttribute('data-theme',start);
+    var btn=document.getElementById('themeToggle');
+    if(btn){
+      btn.innerText=(start==='dark'? '🌙':'🌞');
+      btn.onclick=function(){
+        var cur=document.body.getAttribute('data-theme');
+        var next=cur==='dark'?'light':'dark';
+        document.body.setAttribute('data-theme',next);
+        localStorage.setItem('theme',next);
+        btn.innerText=(next==='dark'? '🌙':'🌞');
+      };
     }
-    document.querySelectorAll('input').forEach(i=>i.addEventListener('input',recalc));
-    document.getElementById('calcBtn').addEventListener('click',recalc);
+  }
+
+  function recalc(){
+    var cpa=num(document.getElementById('cpa').value),
+        fixed=num(document.getElementById('fixed').value),
+        daily=num(document.getElementById('dailyCustomers').value),
+        pct2=num(document.getElementById('pct2').value)/100,
+        pctVoucher=num(document.getElementById('pctVoucher').value)/100,
+        voucher=num(document.getElementById('voucher').value),
+        purchaseGross=num(document.getElementById('purchasePrice').value),
+        sellingGross=num(document.getElementById('sellingPrice').value),
+        VAT=0.21;
+
+    var purchaseNet=purchaseGross/(1+VAT),
+        sellingNet=sellingGross/(1+VAT);
+
+    var margin1=sellingNet-purchaseNet,
+        margin2=margin1*2,
+        marginVoucher=(sellingNet-purchaseNet)-voucher;
+
+    var c2=Math.round(daily*pct2);
+    var c1=Math.max(0, daily - c2);
+    var cVoucher=Math.round(c2*pctVoucher);
+
+    var denom = daily>0 ? daily : 1;
+
+    var avgPre=((c1*margin1)+(c2*margin2)+(cVoucher*marginVoucher))/denom;
+    var avgPost=((c1*(margin1-cpa))+(c2*(margin2-cpa))+(cVoucher*marginVoucher))/denom;
+    var avgPostNoVoucher=((c1*(margin1-cpa))+(c2*(margin2-cpa)))/denom;
+
+    var poas=avgPre/(cpa||1);
+    var profitDay=(daily*avgPost)-fixed;
+    var profitDayNoVoucher=(daily*avgPostNoVoucher)-fixed;
+    var profitMonth=profitDay*30;
+    var breakeven=avgPost>0? Math.ceil(fixed/avgPost) : 0;
+
+    // Averages & POAS
+    var el;
+    el=document.getElementById('avgProfitPre'); if(el) el.innerText=fmt(avgPre)+' lei';
+    el=document.getElementById('avgProfitPost'); if(el) el.innerText=fmt(avgPost)+' lei';
+    el=document.getElementById('avgProfitPostFixed'); if(el) el.innerText=fmt(avgPost-(fixed/denom))+' lei';
+
+    el=document.getElementById('poas');
+    if(el){ el.innerText=fmt(poas)+'×'; el.className=(poas>3? 'blue':'yellow'); }
+
+    // Daily projections
+    el=document.getElementById('profitDay'); if(el) el.innerText=fmt(profitDay)+' lei';
+    el=document.getElementById('profitDayNoVoucher'); if(el) el.innerText=fmt(profitDayNoVoucher)+' lei';
+    el=document.getElementById('profitMonth'); 
+    if(el){ el.innerText=fmt(profitMonth)+' lei'; el.className=(profitMonth>100000? 'green':'yellow'); }
+    el=document.getElementById('breakeven'); if(el) el.innerText=fmt(breakeven);
+
+    // Customer breakdown
+    document.getElementById('count1').innerText=c1+' customers';
+    document.getElementById('count2').innerText=c2+' customers';
+    document.getElementById('countVoucher').innerText=cVoucher+' customers';
+    document.getElementById('profit100').innerText=fmt((c1*margin1)+(c2*margin2)+(cVoucher*marginVoucher))+' lei';
+
+    // Per segment
+    document.getElementById('profit1').innerText=fmt(margin1-cpa)+' lei (after CPA)';
+    document.getElementById('profit1Fixed').innerText=fmt((margin1-cpa)-(fixed/denom))+' lei (after CPA & fixed)';
+    document.getElementById('profit2').innerText=fmt(margin2-cpa)+' lei (after CPA)';
+    document.getElementById('profit2Fixed').innerText=fmt((margin2-cpa)-(fixed/denom))+' lei (after CPA & fixed)';
+    document.getElementById('profitVoucher').innerText=fmt(marginVoucher)+' lei';
+    document.getElementById('profitVoucherFixed').innerText=fmt(marginVoucher-(fixed/denom))+' lei (after fixed)';
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    applyThemeInit();
+    document.querySelectorAll('input').forEach(function(i){ i.addEventListener('input', recalc); });
+    var btn=document.getElementById('calcBtn'); if(btn) btn.addEventListener('click', recalc);
     recalc();
-  </script>
+  });
+})();
+</script>
 </body>
 </html>
